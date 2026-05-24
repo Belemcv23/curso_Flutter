@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 
 class SecondClass extends StatefulWidget {
   const SecondClass({super.key});
+  
 
   @override
   State<SecondClass> createState() => _SecondClassState();
 }
 
 class _SecondClassState extends State<SecondClass> {
+  final _formKey = GlobalKey<FormState>();
+
   String maritalStatus = 'Single';
   bool termsChecked = true;
   String? selectedLocation;
@@ -35,11 +38,17 @@ class _SecondClassState extends State<SecondClass> {
             child: Container(
               margin:EdgeInsets.symmetric(horizontal:10.0),
               child:Form(
+                key:_formKey,
                 child:Column(
                   children:<Widget> [
                     TextFormField(
-                      maxLength: 20,
                       decoration: InputDecoration(labelText: 'Enter Name', hintText: 'name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
                     ),
                     TextFormField(
                       decoration: InputDecoration(hintText: 'Age', labelText: 'Enter Age'),
@@ -108,7 +117,9 @@ class _SecondClassState extends State<SecondClass> {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        // TODO: implement registration action
+                        if (_formKey.currentState!.validate()) {
+                          // TODO: implement registration action
+                        }
                       },
                       child: const Text('Register'),
                     )
