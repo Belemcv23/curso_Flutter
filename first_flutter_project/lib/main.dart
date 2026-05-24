@@ -1,18 +1,31 @@
+import 'package:first_flutter_project/second_file.dart';
 import 'package:flutter/material.dart';
 
-void main(){
-  runApp(
-    MaterialApp(
+void main() => runApp(const Myclass());
+
+class Myclass extends StatelessWidget{
+  const Myclass({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  MaterialApp(
+      debugShowCheckedModeBanner: false,
       title:"My flutter app",
       home:Scaffold(
-        backgroundColor: Colors.yellow,
         appBar:AppBar(
-          title: Text('title'),
+          elevation: 10.0,
+          title:Center(
+            child: Text('title'),
+          ),
+          actions: <Widget>[
+            Icon(Icons.settings)
+          ], 
+          bottom: PreferredSize(
+              preferredSize: Size.fromHeight(40.0),
+            child: Text('This is a text in appbar'),)
         ),
-        body:Center(
-          child: Text('This is a text.', textDirection: TextDirection.ltr,)
-        )
-      ),
-    ),
-  );
+        body: SecondClass()
+      )
+    );
+  }
 }
