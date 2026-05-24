@@ -11,6 +11,9 @@ class SecondClass extends StatefulWidget {
 class _SecondClassState extends State<SecondClass> {
   final _formKey = GlobalKey<FormState>();
 
+  String name = '';
+  int age = 0;
+  String password = '';
   String maritalStatus = 'Single';
   bool termsChecked = true;
   String? selectedLocation;
@@ -45,14 +48,30 @@ class _SecondClassState extends State<SecondClass> {
                       decoration: InputDecoration(labelText: 'Enter Name', hintText: 'name'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return 'Please enter a name';
                         }
                         return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          name = value ?? '';
+                        });
                       },
                     ),
                     TextFormField(
                       decoration: InputDecoration(hintText: 'Age', labelText: 'Enter Age'),
                       keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your age';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          age = int.tryParse(value ?? '') ?? 0;
+                        });
+                      },
                     ),
                     TextFormField(
                       obscureText: true,
@@ -100,16 +119,15 @@ class _SecondClassState extends State<SecondClass> {
                       ),
                     ),
                     CheckboxListTile(
-                      controlAffinity: ListTileControlAffinity.leading,
                       value: termsChecked,
-                      title: const Text(
-                        'Sign up for the newspaper and related articles',
-                      ),
-                      onChanged: (bool? value) {
+                      onChanged: (value) {
                         setState(() {
                           termsChecked = value ?? false;
                         });
                       },
+                      title: const Text(
+                        'Sign up for the newspaper and related articles',
+                      ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -117,19 +135,29 @@ class _SecondClassState extends State<SecondClass> {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // TODO: implement registration action
-                        }
+                        _submitForm();
                       },
                       child: const Text('Register'),
-                    )
+                    ),
                   ],
-                      )
-                    )
+                ),
+              ),
             ),
           )
         )
     );
   }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      debugPrint('Name: $name');
+      debugPrint('Age: $age');
+      debugPrint('Password: $password');
+      debugPrint('City: ${selectedLocation ?? 'None'}');
+      debugPrint('Marital Status: $maritalStatus');
+      debugPrint('Terms Checked: $termsChecked');
+    }
+  }
 }
-      
