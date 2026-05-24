@@ -26,7 +26,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+fetchPosts() async{
 
+}
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +41,30 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body:Container(
-        child:  ListView.builder(
+        child:  FutureBuilder(
+          future:fetchPosts(),
+          builder:(BuildContext context, AsyncSnapshot snapshot){
+           if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child:CircularProgressIndicator(),
+           );
+          } 
+          
+          else if(snapshot.data!=null){
+              if(snapshot.data=="Sorry for Iconvenience, Server Under Maintainence"){
+                return Center(
+                    child:Text(snapshot.data.toString()),
+                  );
+              }
+              else{
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
           
             itemBuilder: (BuildContext context,int index){
               
           return Container(
             decoration: BoxDecoration(
-                boxShadow: <BoxShadow>[
+                boxShadow: const[
                   BoxShadow(
                     color: Color(0xFFE0E0E0),
                     offset: Offset(0.5, 0.5),
@@ -58,11 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
             margin: EdgeInsets.all(8),
             padding: EdgeInsets.all(8),
             child: Row(
-              children: <Widget>[
+              children: [
                 Container(
                   width: MediaQuery.of(context).size.width/6,
-                  child:
-                Container(
+                  child: Container(
                   
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -75,22 +93,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     child:Text("1",style: TextStyle(color:Colors.white,fontSize: 16,fontWeight: FontWeight.w700),))
                 )),
 
-                Container(
-                  child: Column(
+                 Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                  children:<Widget>[
+                    children:const[
                    Text("Banglore",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700)),
                     Text("15 Km from Banglore",style: TextStyle(fontSize: 12))
 
                   ]
-                  ),
-                )
+                ),
               ],
             ),
           );
-    })
-    ));
-
-    
+    });
+              }
+            }
+            else {
+        return const Center(
+          child: Text("No data available"),
+        );
+            }
+         },
+        
+    ))
+    );
   }
 }
