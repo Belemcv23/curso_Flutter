@@ -1,19 +1,29 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
-class SecondClass extends StatelessWidget {
+class SecondClass extends StatefulWidget {
   const SecondClass({super.key});
 
   @override
+  State<SecondClass> createState() => _SecondClassState();
+}
+
+class _SecondClassState extends State<SecondClass> {
+  String maritalStatus = 'Single';
+  bool termsChecked = true;
+  String? selectedLocation;
+
+  final List<String> locations = ['A', 'B', 'C', 'D'];
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mi Segunda Pantalla'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings), // <- Aquí engancha con tu línea 16 y 17
-            onPressed: () {},
-          ),
+        elevation: 10.0,
+        title:Center(child: Text('Title'),
+        ),
+        actions:<Widget> [
+          Icon(Icons.settings), 
         ],
         // bottom: PreferredSize(
           //     preferredSize: Size.fromHeight(40.0),
@@ -21,40 +31,94 @@ class SecondClass extends StatelessWidget {
           // ),
         ),
         body: Material(
-          child:ListView(
-            children:<Widget>[
-              ListTile(
-                leading: Icon(Icons.ac_unit),
-                title: Text('Dog'),
-                subtitle:Text('This is an animal'),
-                trailing: Icon(Icons.access_time),
-              ),
-              ListTile(
-                leading: Icon(Icons.access_alarm),
-                title: Text('Cat'),
-                subtitle:Text('This is an animal'),
-                trailing: Icon(Icons.access_time),
-              ),
-              Padding(
-                child:Text('Dog'),
-                padding: EdgeInsets.all(10.0),
-                ),
-              Container(
-                child:Text('cat'),
-                margin: EdgeInsets.symmetric(horizontal:30.0),
-                color: Colors.green,
-                padding: EdgeInsets.only(top:20.0),
-              ),
-
-            ]
+          child:SingleChildScrollView(
+            child: Container(
+              margin:EdgeInsets.symmetric(horizontal:10.0),
+              child:Form(
+                child:Column(
+                  children:<Widget> [
+                    TextFormField(
+                      maxLength: 20,
+                      decoration: InputDecoration(labelText: 'Enter Name', hintText: 'name'),
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(hintText: 'Age', labelText: 'Enter Age'),
+                      keyboardType: TextInputType.phone,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Password', labelText: 'Enter Password'),
+                    ),
+                    DropdownButton<String>(
+                      hint: const Text('Please choose the city you live in'),
+                      value: selectedLocation,
+                      items: locations.map((location) {
+                        return DropdownMenuItem<String>(
+                          value: location,
+                          child: Text(location),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedLocation = newValue;
+                        });
+                      },
+                    ),
+                    RadioGroup<String>(
+                      groupValue: maritalStatus,
+                      onChanged: (String? value) {
+                        setState(() {
+                          maritalStatus = value ?? 'Single';
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: RadioListTile<String>(
+                              title: const Text('Single'),
+                              value: 'Single',
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<String>(
+                              title: const Text('Married'),
+                              value: 'Married',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: termsChecked,
+                      title: const Text(
+                        'Sign up for the newspaper and related articles',
+                      ),
+                      onChanged: (bool? value) {
+                        setState(() {
+                          termsChecked = value ?? false;
+                        });
+                      },
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        // TODO: implement registration action
+                      },
+                      child: const Text('Register'),
+                    )
+                  ],
+                      )
+                    )
+            ),
           )
-        ));
-   }
-   
-   String generateNumbers(){
-    var r=Random();
-    int i=r.nextInt(20);
-    return 'A random number between 0 and 20: $i';
-   }
-    
-} 
+        )
+    );
+  }
+}
+      
